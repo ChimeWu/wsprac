@@ -1,4 +1,5 @@
-use rand::{rngs::ThreadRng, Rng};
+use rand::rngs::ThreadRng;
+use tokio_tungstenite::tungstenite::protocol::Message;
 
 pub mod event_type;
 pub mod subscrib_stream;
@@ -8,6 +9,7 @@ pub use subscrib_stream::*;
 
 pub trait UpdataStream {
     fn update(&mut self, time: u64, rng: &mut ThreadRng);
+    fn to_message(&self) -> Message;
 }
 
 pub fn parse_stream_name(stream_name: StreamName) -> Box<dyn UpdataStream> {

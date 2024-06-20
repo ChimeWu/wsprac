@@ -1,5 +1,8 @@
-use crate::*;
+use super::EventType;
+use crate::subscrib_stream::Symbol;
+use crate::UpdataStream;
 use rand::rngs::ThreadRng;
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -77,5 +80,10 @@ impl UpdataStream for KLineStream {
         self.base_asset_volume = rng.gen_range(0.0..10.0).to_string();
         self.number_of_trades += 1;
         self.is_kline_closed = rng.gen_bool(0.5);
+    }
+
+    fn to_message(&self) -> tokio_tungstenite::tungstenite::Message {
+        let message = serde_json::to_string_pretty(self).unwrap();
+        tokio_tungstenite::tungstenite::Message::Text(message)
     }
 }

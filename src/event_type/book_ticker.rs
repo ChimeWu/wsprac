@@ -1,5 +1,8 @@
-use crate::*;
+use super::EventType;
+use crate::subscrib_stream::Symbol;
+use crate::UpdataStream;
 use rand::rngs::ThreadRng;
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -62,5 +65,10 @@ impl UpdataStream for BookTickerStream {
         self.inside_bid_price = rng.gen_range(140.0..190.0).to_string();
         self.inside_bid_quantity = rng.gen_range(0.0..10.0).to_string();
         self.update_id = rng.gen_range(1000000..9999999).to_string();
+    }
+
+    fn to_message(&self) -> tokio_tungstenite::tungstenite::Message {
+        let message = serde_json::to_string_pretty(self).unwrap();
+        tokio_tungstenite::tungstenite::Message::Text(message)
     }
 }
