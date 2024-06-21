@@ -7,8 +7,8 @@ pub mod subscrib_stream;
 pub use event_type::*;
 pub use subscrib_stream::*;
 
-pub trait UpdataStream {
-    fn update(&mut self, time: u64, rng: &mut ThreadRng);
+pub trait UpdataStream: Send {
+    fn update(&mut self, time: u64, rng: ThreadRng);
     fn to_message(&self) -> Message;
 }
 

@@ -67,9 +67,9 @@ impl DepthStream {
 }
 
 impl UpdataStream for DepthStream {
-    fn update(&mut self, time: u64, rng: &mut ThreadRng) {
+    fn update(&mut self, time: u64, mut rng: ThreadRng) {
         self.event_time = time;
-        self.engine_timestamp = time - rng.gen_range(0..1000);
+        self.engine_timestamp = time;
         self.first_update_id += 1;
         self.final_update_id += 1;
         self.asks = vec![vec![

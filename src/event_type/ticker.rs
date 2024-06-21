@@ -61,7 +61,7 @@ impl TickerStream {
 }
 
 impl UpdataStream for TickerStream {
-    fn update(&mut self, time: u64, rng: &mut ThreadRng) {
+    fn update(&mut self, time: u64, mut rng: ThreadRng) {
         self.event_time = time;
         self.first_price = rng.gen_range(140.0..190.0).to_string();
         self.last_price = rng.gen_range(140.0..190.0).to_string();

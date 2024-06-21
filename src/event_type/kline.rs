@@ -69,9 +69,9 @@ impl KLineStream {
 }
 
 impl UpdataStream for KLineStream {
-    fn update(&mut self, time: u64, rng: &mut ThreadRng) {
+    fn update(&mut self, time: u64, mut rng: ThreadRng) {
         self.event_time = time;
-        self.kline_start_time = time - rng.gen_range(0..1000);
+        self.kline_start_time = time;
         self.kline_close_time = time;
         self.open_price = rng.gen_range(140.0..190.0).to_string();
         self.close_price = rng.gen_range(140.0..190.0).to_string();

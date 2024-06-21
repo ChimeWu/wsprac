@@ -57,9 +57,9 @@ impl BookTickerStream {
 }
 
 impl UpdataStream for BookTickerStream {
-    fn update(&mut self, time: u64, rng: &mut ThreadRng) {
+    fn update(&mut self, time: u64, mut rng: ThreadRng) {
         self.event_time = time;
-        self.engine_timestamp = time - rng.gen_range(0..1000);
+        self.engine_timestamp = time;
         self.inside_ask_price = rng.gen_range(140.0..190.0).to_string();
         self.inside_ask_quantity = rng.gen_range(0.0..10.0).to_string();
         self.inside_bid_price = rng.gen_range(140.0..190.0).to_string();

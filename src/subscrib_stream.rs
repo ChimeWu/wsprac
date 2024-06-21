@@ -1,7 +1,8 @@
 use super::event_type::EventType;
 use serde::{Deserialize, Serialize};
+use std::fmt::{self, Display, Formatter};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Symbol {
     #[serde(rename = "SOL_USD")]
     SolUsd,
@@ -19,7 +20,16 @@ impl From<String> for Symbol {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+impl Display for Symbol {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Symbol::SolUsd => write!(f, "SOL_USD"),
+            Symbol::SolUsdc => write!(f, "SOL_USDC"),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct StreamName {
     pub stream: EventType,
     pub interval: Option<String>,
@@ -67,16 +77,35 @@ impl From<String> for StreamName {
     }
 }
 
+impl Display for StreamName {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match &self.interval {
+            Some(interval) => write!(f, "{}.{}.{}", self.stream, interval, self.symbol),
+            None => write!(f, "{}.{}", self.stream, self.symbol),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Method {
-    #[serde(rename = "subscribe")]
+    #[serde(rename = "SUBSCRIBE")]
     Subscribe,
-    #[serde(rename = "unsubscribe")]
+    #[serde(rename = "UNSUBSCRIBE")]
     Unsubscribe,
+}
+
+impl From<String> for Method {
+    fn from(method: String) -> Self {
+        match method.as_str() {
+            "SUBSCRIBE" => Method::Subscribe,
+            "UNSUBSCRIBE" => Method::Unsubscribe,
+            _ => panic!("Invalid method type"),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SubscribStream {
-    method: Method,
-    params: Vec<StreamName>,
+    pub method: Method,
+    pub params: Vec<StreamName>,
 }

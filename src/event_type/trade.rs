@@ -61,9 +61,9 @@ impl TradeStream {
 }
 
 impl UpdataStream for TradeStream {
-    fn update(&mut self, time: u64, rng: &mut ThreadRng) {
+    fn update(&mut self, time: u64, mut rng: ThreadRng) {
         self.event_time = time;
-        self.engine_timestamp = time - rng.gen_range(0..1000);
+        self.engine_timestamp = time;
         self.price = rng.gen_range(140.0..190.0).to_string();
         self.quantity = rng.gen_range(0.0..10.0).to_string();
         self.buyer_order_id = rng.gen_range(1000000..9999999).to_string();

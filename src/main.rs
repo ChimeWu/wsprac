@@ -1,10 +1,12 @@
-use backpack::*;
+use backpack::subscrib_stream::*;
 
 fn main() {
-    let stream_name = StreamName::from("depth.SOL_USDC".to_string());
-    let mut stream = parse_stream_name(stream_name);
-    let mut rng = rand::thread_rng();
-    stream.update(5000, &mut rng);
-    let message = stream.to_message();
-    println!("{:?}", message);
+    let stream_name = "depth.SOL_USDC".to_string().into();
+    let method = Method::Subscribe;
+    let subscrib_stream = SubscribStream {
+        method,
+        params: vec![stream_name],
+    };
+    let json = serde_json::to_string(&subscrib_stream).unwrap();
+    println!("{}", json);
 }

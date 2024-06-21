@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::fmt::{self, Display, Formatter};
 
 pub mod book_ticker;
 pub mod depth;
@@ -12,7 +13,7 @@ pub use kline::KLineStream;
 pub use ticker::TickerStream;
 pub use trade::TradeStream;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum EventType {
     #[serde(rename = "kline")]
     Kline,
@@ -35,6 +36,18 @@ impl From<String> for EventType {
             "depth" => EventType::Depth,
             "bookTicker" => EventType::BookTicker,
             _ => panic!("Invalid event type"),
+        }
+    }
+}
+
+impl Display for EventType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            EventType::Kline => write!(f, "kline"),
+            EventType::Ticker => write!(f, "ticker"),
+            EventType::Trade => write!(f, "trade"),
+            EventType::Depth => write!(f, "depth"),
+            EventType::BookTicker => write!(f, "bookTicker"),
         }
     }
 }
