@@ -19,6 +19,11 @@ use tracing::info;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
+
+    let client = redis::Client::open("redis://127.0.0.1/")?;
+    let mut con = client.get_connection()?;
+    let channel_name = "channel";
+
     let opt = Opts::parse();
     let url = opt.url;
     info!("User input url: {}", url);
@@ -54,6 +59,10 @@ async fn main() -> anyhow::Result<()> {
                 }
                 let v = serde_json::from_str::<Value>(&text)?;
                 let mut pretty_msg = serde_json::to_string_pretty(&v)?;
+                redis::cmd("PUBLISH")
+                    .arg(channel_name)
+                    .arg(pretty_msg.clone())
+                    .query(&mut con)?;
                 pretty_msg += "\n";
                 let mut file = OpenOptions::new()
                     .create(true)
